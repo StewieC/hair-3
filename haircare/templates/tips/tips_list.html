@@ -1,0 +1,35 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Community Tips{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Community Hair Care Tips</h1>
+        <a href="{% url 'add_tip' %}" class="btn-primary">Share Your Tip</a>
+    </div>
+
+    {% for tip in tips %}
+    <div class="tip-card">
+        <div class="tip-header">
+            <h3>{{ tip.title }}</h3>
+            {% if tip.hair_type %}
+                <span class="hair-type">{{ tip.get_hair_type_display }}</span>
+            {% endif %}
+        </div>
+        <div class="tip-content">
+            {{ tip.content }}
+        </div>
+        <div class="tip-footer">
+            <span>By {{ tip.author_name }}</span>
+            <span>{{ tip.created_at|date:"M d, Y" }}</span>
+        </div>
+    </div>
+    {% empty %}
+    <div class="tip-card">
+        <p style="text-align: center; color: var(--text-muted);">No tips yet. Be the first to share!</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

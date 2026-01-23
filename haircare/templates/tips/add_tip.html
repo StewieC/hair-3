@@ -1,0 +1,43 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Share a Tip{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="form-card">
+        <h1 style="text-align: center; margin-bottom: 2rem;">Share Your Hair Tip</h1>
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="question">
+                <label for="title">Tip Title</label>
+                <input type="text" id="title" name="title" placeholder="e.g., How I stopped my hair breakage" required>
+            </div>
+
+            <div class="question">
+                <label for="content">Your Tip</label>
+                <textarea id="content" name="content" rows="8" placeholder="Share your hair care wisdom..." required></textarea>
+            </div>
+
+            <div class="question">
+                <label for="hair_type">Hair Type (optional)</label>
+                <select id="hair_type" name="hair_type">
+                    <option value="">Any hair type</option>
+                    <option value="straight">Straight</option>
+                    <option value="wavy">Wavy</option>
+                    <option value="curly">Curly</option>
+                    <option value="coily">Coily</option>
+                </select>
+            </div>
+
+            <div class="question">
+                <label for="author_name">Your Name (optional)</label>
+                <input type="text" id="author_name" name="author_name" placeholder="Leave blank to post anonymously">
+            </div>
+
+            <button type="submit" class="btn-primary">Post Tip</button>
+            <a href="{% url 'tips_list' %}" class="btn-secondary" style="margin-top: 1rem;">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

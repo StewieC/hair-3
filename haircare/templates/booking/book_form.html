@@ -1,0 +1,51 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Book {{ stylist.name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="form-card">
+        <h1 style="text-align: center;">Book Appointment with {{ stylist.name }}</h1>
+        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">
+            📍 {{ stylist.location }} • ⭐ {{ stylist.rating }} Rating
+        </p>
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="question">
+                <label for="client_name">Your Name</label>
+                <input type="text" id="client_name" name="client_name" placeholder="Full Name" required>
+            </div>
+
+            <div class="question">
+                <label for="client_phone">Your Phone Number</label>
+                <input type="tel" id="client_phone" name="client_phone" placeholder="0712345678" required>
+            </div>
+
+            <div class="question">
+                <label for="service">Service</label>
+                <input type="text" id="service" name="service" placeholder="e.g., Braids, Relaxer, Hair Treatment" required>
+            </div>
+
+            <div class="question">
+                <label for="date">Preferred Date</label>
+                <input type="date" id="date" name="date" required>
+            </div>
+
+            <div class="question">
+                <label for="time">Preferred Time</label>
+                <input type="time" id="time" name="time" required>
+            </div>
+
+            <div class="question">
+                <label for="notes">Special Requests (optional)</label>
+                <textarea id="notes" name="notes" rows="4" placeholder="Any special requirements or preferences..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-primary">Confirm Booking</button>
+            <a href="{% url 'stylist_list' %}" class="btn-secondary" style="margin-top: 1rem;">← Back to Stylists</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

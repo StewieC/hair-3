@@ -1,0 +1,39 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Book a Stylist{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 style="text-align: center; margin-bottom: 2rem;">Find & Book a Hair Stylist</h1>
+
+    <form method="GET" class="search-bar">
+        <input type="text" name="location" placeholder="Enter city e.g. Nairobi, Mombasa, Kisumu..." 
+               value="{{ current_location }}">
+        <button type="submit">Search</button>
+    </form>
+
+    <div class="stylists-grid">
+        {% for stylist in stylists %}
+        <div class="stylist-card">
+            {% if stylist.image_url %}
+                <img src="{{ stylist.image_url }}" alt="{{ stylist.name }}">
+            {% else %}
+                <div class="placeholder-img">💇‍♀️</div>
+            {% endif %}
+            <div class="stylist-info">
+                <h3>{{ stylist.name }}</h3>
+                <p><strong>Location:</strong> {{ stylist.location }}</p>
+                <p><strong>Services:</strong> {{ stylist.services }}</p>
+                <p><strong>Price Range:</strong> {{ stylist.price_range|default:"Contact for pricing" }}</p>
+                <p><strong>Rating:</strong> {{ stylist.rating }} ⭐</p>
+                <p><strong>Phone:</strong> {{ stylist.phone }}</p>
+                <a href="{% url 'book_stylist' stylist.id %}" class="btn-primary" style="margin-top: 1rem; width: 100%;">Book Now</a>
+            </div>
+        </div>
+        {% empty %}
+        <p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">No stylists found in this area yet.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

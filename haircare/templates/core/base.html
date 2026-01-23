@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}HairCare Community{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <h2><a href="{% url 'home' %}" class="logo">HairCare</a></h2>
+            <ul class="nav-menu">
+                <li><a href="{% url 'home' %}">Quiz</a></li>
+                <li><a href="{% url 'tips_list' %}">Tips</a></li>
+                <li><a href="{% url 'shop_home' %}">Shop</a></li>
+                <li><a href="{% url 'stylist_list' %}">Book Stylist</a></li>
+                <li><a href="{% url 'chatbot:chatbot_page' %}">AI Assistant</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Main Content Block -->
+    <main class="main-content">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 HairCare Community. Made with love for healthy hair.</p>
+    </footer>
+</body>
+</html>

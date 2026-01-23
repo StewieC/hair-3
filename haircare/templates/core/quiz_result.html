@@ -1,0 +1,61 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Your Personalized Hair Routine{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="result-card">
+        <h1>Your Hair Profile</h1>
+        
+        <div class="profile-summary">
+            <p><strong>Hair Type:</strong> <span class="highlight">{{ result.hair_type|capfirst }}</span></p>
+            <p><strong>Scalp Type:</strong> <span class="highlight">{{ result.scalp_type|capfirst }}</span></p>
+            {% if result.concerns %}
+                <p><strong>Concerns:</strong> 
+                    {% for concern in result.concerns %}
+                        <span class="tag">{{ concern|capfirst }}</span>
+                    {% endfor %}
+                </p>
+            {% endif %}
+            {% if result.porosity %}
+                <p><strong>Porosity:</strong> <span class="highlight">{{ result.porosity|capfirst }}</span></p>
+            {% endif %}
+        </div>
+
+        <div class="routine-box">
+            <h2>Your Recommended Routine</h2>
+            <ul class="routine-list">
+                {% if result.hair_type == 'curly' or result.hair_type == 'coily' %}
+                    <li>Wash 1–2 times per week with sulfate-free shampoo</li>
+                    <li>Deep condition every wash day</li>
+                    <li>Use leave-in conditioner + oil sealing</li>
+                {% elif result.hair_type == 'wavy' %}
+                    <li>Co-wash or light shampoo 2–3 times per week</li>
+                    <li>Use lightweight mousse or cream</li>
+                {% else %}
+                    <li>Wash 2–3 times per week</li>
+                    <li>Focus on scalp health</li>
+                {% endif %}
+
+                {% if 'dryness' in result.concerns or result.scalp_type == 'dry' %}
+                    <li>Apply hydrating mask 2x weekly</li>
+                    <li>Use shea butter or heavy oils (coconut, avocado)</li>
+                {% endif %}
+                {% if 'frizz' in result.concerns %}
+                    <li>Use anti-humidity cream or gel</li>
+                {% endif %}
+                {% if 'breakage' in result.concerns %}
+                    <li>Trim ends every 6-8 weeks</li>
+                    <li>Use protein treatments monthly</li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <div class="actions">
+            <a href="{% url 'home' %}" class="btn-secondary">Take Quiz Again</a>
+            <a href="{% url 'tips_list' %}" class="btn-primary">Explore Community Tips</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

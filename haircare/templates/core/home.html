@@ -1,0 +1,64 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Home - Discover Your Hair Type{% endblock %}
+
+{% block content %}
+<div class="container">
+    <header class="hero">
+        <h1>Find Your Perfect Hair Routine</h1>
+        <p>Answer 4 quick questions → Get personalized tips instantly</p>
+    </header>
+
+    <div class="quiz-card">
+        <form action="{% url 'quiz_submit' %}" method="POST" class="quiz-form">
+            {% csrf_token %}
+
+            <div class="question">
+                <label>1. What's your hair type?</label>
+                <select name="hair_type" title="Hair type selection" required>
+                    <option value="">Choose...</option>
+                    <option value="straight">Straight</option>
+                    <option value="wavy">Wavy</option>
+                    <option value="curly">Curly</option>
+                    <option value="coily">Coily</option>
+                </select>
+            </div>
+
+            <div class="question">
+                <label for="scalp_type">2. How does your scalp feel?</label>
+                <select id="scalp_type" name="scalp_type" title="Scalp type selection" required>
+                    <option value="">Choose...</option>
+                    <option value="dry">Dry / Itchy</option>
+                    <option value="oily">Oily / Greasy</option>
+                    <option value="normal">Normal</option>
+                    <option value="combination">Combination</option>
+                </select>
+            </div>
+
+            <div class="question">
+                <label>3. Main concerns? (select all that apply)</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" name="concerns" value="frizz"> Frizz</label>
+                    <label><input type="checkbox" name="concerns" value="breakage"> Breakage</label>
+                    <label><input type="checkbox" name="concerns" value="dryness"> Dryness</label>
+                    <label><input type="checkbox" name="concerns" value="volume"> Lack of Volume</label>
+                    <label><input type="checkbox" name="concerns" value="dandruff"> Dandruff</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label for="porosity">4. Hair porosity (optional)</label>
+                <select id="porosity" name="porosity">
+                    <option value="">I don't know</option>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-primary">Get My Routine</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
