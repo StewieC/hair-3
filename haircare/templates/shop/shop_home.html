@@ -17,6 +17,18 @@
         </div>
     </div>
 
+    <!-- NEW: Sort Options -->
+    <div style="margin: 2rem 0; display: flex; gap: 1rem; justify-content: flex-end;">
+        <label for="sort" style="color: var(--text-secondary);">Sort by:</label>
+        <select id="sort" onchange="window.location.href='?hair_type={{ selected_hair_type }}&sort=' + this.value" 
+                style="padding: 0.5rem 1rem; background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 0.5rem; color: var(--text-primary);">
+            <option value="featured" {% if sort_by == 'featured' %}selected{% endif %}>Featured</option>
+            <option value="rating" {% if sort_by == 'rating' %}selected{% endif %}>Highest Rated</option>
+            <option value="price_low" {% if sort_by == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+            <option value="price_high" {% if sort_by == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+        </select>
+    </div>
+
     <div class="products-grid">
         {% for product in products %}
         <div class="product-card">
@@ -33,10 +45,29 @@
             <div class="product-info">
                 <h3>{{ product.name }}</h3>
                 <p class="hair-type">{{ product.get_hair_type_display }}</p>
+                
+                <!-- NEW: Star Rating Display -->
+                <div style="margin: 1rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                    <div class="star-rating">
+                        {% with rating=product.average_rating %}
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= rating %}
+                                    <span style="color: #FCD34D; font-size: 1.2rem;">★</span>
+                                {% else %}
+                                    <span style="color: var(--text-muted); font-size: 1.2rem;">☆</span>
+                                {% endif %}
+                            {% endfor %}
+                        {% endwith %}
+                    </div>
+                    <span style="color: var(--text-secondary); font-size: 0.9rem;">
+                        ({{ product.review_count }} {% if product.review_count == 1 %}review{% else %}reviews{% endif %})
+                    </span>
+                </div>
+                
                 <p class="description">{{ product.description|truncatewords:20 }}</p>
                 <div class="price-cart">
                     <span class="price">KSh {{ product.price }}</span>
-                    <button class="add-to-cart">Add to Cart</button>
+                    <a href="{% url 'product_detail' product.id %}" class="add-to-cart">View Details</a>
                 </div>
             </div>
         </div>

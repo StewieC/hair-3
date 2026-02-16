@@ -1,0 +1,184 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} - Shop{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Back Button -->
+    <a href="{% url 'shop_home' %}" class="btn-secondary" style="margin-bottom: 2rem; display: inline-block;">
+        ← Back to Shop
+    </a>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-bottom: 4rem;">
+        <!-- Product Image -->
+        <div>
+            {% if product.image_url %}
+                <img src="{{ product.image_url }}" alt="{{ product.name }}" 
+                     style="width: 100%; border-radius: var(--radius-xl); box-shadow: var(--shadow-lg);">
+            {% else %}
+                <div class="placeholder-img" style="height: 500px; font-size: 5rem;">📦</div>
+            {% endif %}
+        </div>
+
+        <!-- Product Info -->
+        <div>
+            <span class="hair-type">{{ product.get_hair_type_display }}</span>
+            <h1 style="margin: 1rem 0;">{{ product.name }}</h1>
+            
+            <!-- Rating Summary -->
+            <div style="display: flex; align-items: center; gap: 1rem; margin: 1.5rem 0;">
+                <div class="star-rating" style="font-size: 1.5rem;">
+                    {% with rating=average_rating %}
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= rating %}
+                                <span style="color: #FCD34D;">★</span>
+                            {% else %}
+                                <span style="color: var(--text-muted);">☆</span>
+                            {% endif %}
+                        {% endfor %}
+                    {% endwith %}
+                </div>
+                <span style="font-size: 1.5rem; font-weight: 700; color: var(--primary-light);">
+                    {{ average_rating }}
+                </span>
+                <span style="color: var(--text-secondary);">
+                    ({{ review_count }} {% if review_count == 1 %}review{% else %}reviews{% endif %})
+                </span>
+            </div>
+
+            <div style="font-size: 3rem; font-weight: 900; margin: 2rem 0; 
+                        background: linear-gradient(135deg, var(--primary), var(--secondary));
+                        -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                KSh {{ product.price }}
+            </div>
+
+            <p style="font-size: 1.125rem; line-height: 1.8; color: var(--text-secondary); margin: 2rem 0;">
+                {{ product.description }}
+            </p>
+
+            <button class="btn-primary" style="width: 100%; margin-top: 2rem; font-size: 1.25rem;">
+                Add to Cart
+            </button>
+
+            {% if product.in_stock %}
+                <p style="color: var(--primary-light); margin-top: 1rem; text-align: center;">✓ In Stock</p>
+            {% else %}
+                <p style="color: var(--secondary); margin-top: 1rem; text-align: center;">Out of Stock</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div style="border-top: 2px solid var(--border-color); padding-top: 3rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h2>Customer Reviews</h2>
+            <a href="{% url 'add_review' product.id %}" class="btn-primary">Write a Review</a>
+        </div>
+
+        <!-- Rating Distribution -->
+        {% if review_count > 0 %}
+        <div style="background: var(--bg-card); padding: 2rem; border-radius: var(--radius-lg); margin-bottom: 3rem;">
+            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; align-items: center;">
+                <div style="text-align: center;">
+                    <div style="font-size: 4rem; font-weight: 900; color: var(--primary-light);">
+                        {{ average_rating }}
+                    </div>
+                    <div class="star-rating" style="font-size: 1.5rem; margin: 0.5rem 0;">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= average_rating %}
+                                <span style="color: #FCD34D;">★</span>
+                            {% else %}
+                                <span style="color: var(--text-muted);">☆</span>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <p style="color: var(--text-muted);">Based on {{ review_count }} reviews</p>
+                </div>
+
+                <div>
+                    {% for stars in "54321" %}
+                        {% with count=rating_distribution|get_item:stars|default:0 %}
+                        <div style="display: flex; align-items: center; gap: 1rem; margin: 0.5rem 0;">
+                            <span style="color: var(--text-secondary); width: 60px;">{{ stars }} stars</span>
+                            <div style="flex: 1; height: 8px; background: var(--bg-dark); border-radius: var(--radius-full); overflow: hidden;">
+                                <div style="height: 100%; background: var(--primary); width: {% if review_count > 0 %}{{ count|multiply:100|divide:review_count }}%{% else %}0%{% endif %};"></div>
+                            </div>
+                            <span style="color: var(--text-muted); width: 40px;">{{ count }}</span>
+                        </div>
+                        {% endwith %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Individual Reviews -->
+        <div>
+            {% for review in reviews %}
+            <div class="tip-card" style="margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                            <span style="font-weight: 700; font-size: 1.125rem; color: var(--text-primary);">
+                                {{ review.reviewer_name }}
+                            </span>
+                            {% if review.hair_type != 'unknown' %}
+                                <span class="tag" style="font-size: 0.75rem;">{{ review.get_hair_type_display }} Hair</span>
+                            {% endif %}
+                        </div>
+                        <div class="star-rating" style="margin: 0.5rem 0;">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= review.rating %}
+                                    <span style="color: #FCD34D; font-size: 1.25rem;">★</span>
+                                {% else %}
+                                    <span style="color: var(--text-muted); font-size: 1.25rem;">☆</span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <span style="color: var(--text-muted); font-size: 0.9rem;">
+                        {{ review.created_at|date:"M d, Y" }}
+                    </span>
+                </div>
+
+                <h4 style="color: var(--text-primary); margin-bottom: 1rem;">{{ review.title }}</h4>
+                <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1rem;">
+                    {{ review.review_text }}
+                </p>
+
+                {% if review.image_url %}
+                <img src="{{ review.image_url }}" alt="Review photo" 
+                     style="max-width: 300px; border-radius: var(--radius-md); margin: 1rem 0;">
+                {% endif %}
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                    {% if review.would_recommend %}
+                        <span style="color: var(--primary-light);">✓ Would recommend</span>
+                    {% else %}
+                        <span style="color: var(--text-muted);">Would not recommend</span>
+                    {% endif %}
+                    
+                    <a href="{% url 'mark_helpful' review.id %}" 
+                       style="color: var(--text-secondary); text-decoration: none; transition: color 0.3s;">
+                        👍 Helpful ({{ review.helpful_count }})
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="tip-card" style="text-align: center;">
+                <p style="color: var(--text-muted); font-size: 1.125rem;">
+                    No reviews yet. Be the first to review this product!
+                </p>
+                <a href="{% url 'add_review' product.id %}" class="btn-primary" style="margin-top: 1.5rem;">
+                    Write the First Review
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Custom template filter for rating distribution -->
+{% load custom_filters %}
+{% endblock %}
