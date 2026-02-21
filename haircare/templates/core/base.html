@@ -9,39 +9,188 @@
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <h2><a href="{% url 'home' %}" class="logo">HairCare</a></h2>
-            <ul class="nav-menu">
-                <li><a href="{% url 'home' %}">Quiz</a></li>
-                <li><a href="{% url 'tips_list' %}">Tips</a></li>
-                <li><a href="{% url 'gallery_home' %}">Gallery</a></li> 
-                <li><a href="{% url 'shop_home' %}">Shop</a></li>
-                <li><a href="{% url 'stylist_list' %}">Book Stylist</a></li>
-                <li><a href="{% url 'chatbot:chatbot_page' %}">AI Assistant</a></li>
-            </ul>
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <a href="{% url 'home' %}" class="mobile-logo">HairCare</a>
+        <div class="mobile-spacer"></div>
+    </header>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <!-- Logo -->
+        <div class="sidebar-header">
+            <a href="{% url 'home' %}" class="sidebar-logo">
+                <span class="logo-icon">💇‍♀️</span>
+                <span class="logo-text">HairCare</span>
+            </a>
         </div>
-    </nav>
 
-    <!-- Flash Messages -->
-    {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <div class="alert">{{ message }}</div>
-            {% endfor %}
+        <!-- Navigation Menu -->
+        <nav class="sidebar-nav">
+            <a href="{% url 'home' %}" class="nav-item {% if request.path == '/' %}active{% endif %}">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-text">Home</span>
+            </a>
+
+            <a href="{% url 'tips_list' %}" class="nav-item {% if '/tips/' in request.path %}active{% endif %}">
+                <span class="nav-icon">💡</span>
+                <span class="nav-text">Tips</span>
+            </a>
+
+            <a href="{% url 'gallery_home' %}" class="nav-item {% if '/gallery/' in request.path %}active{% endif %}">
+                <span class="nav-icon">🖼️</span>
+                <span class="nav-text">Gallery</span>
+            </a>
+
+            <a href="{% url 'shop_home' %}" class="nav-item {% if '/shop/' in request.path %}active{% endif %}">
+                <span class="nav-icon">🛍️</span>
+                <span class="nav-text">Shop</span>
+            </a>
+
+            <a href="{% url 'calendar_home' %}" class="nav-item {% if '/calendar/' in request.path %}active{% endif %}">
+                <span class="nav-icon">📅</span>
+                <span class="nav-text">Calendar</span>
+            </a>
+
+            <a href="{% url 'stylist_list' %}" class="nav-item {% if '/booking/' in request.path %}active{% endif %}">
+                <span class="nav-icon">💆‍♀️</span>
+                <span class="nav-text">Book Stylist</span>
+            </a>
+
+            <a href="{% url 'chatbot:chatbot_page' %}" class="nav-item nav-item-special {% if '/chatbot/' in request.path %}active{% endif %}">
+                <span class="nav-icon">💬</span>
+                <span class="nav-text">AI Assistant</span>
+            </a>
+
+            <!-- Divider -->
+            <div class="nav-divider"></div>
+
+            <a href="{% url 'schedule_history' %}" class="nav-item {% if '/calendar/history/' in request.path %}active{% endif %}">
+                <span class="nav-icon">📊</span>
+                <span class="nav-text">My Progress</span>
+            </a>
+        </nav>
+
+        <!-- Sidebar Footer -->
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar">👤</div>
+                <div class="user-details">
+                    <div class="user-name">Guest User</div>
+                    <div class="user-status">Free Plan</div>
+                </div>
+            </div>
         </div>
-    {% endif %}
+    </aside>
 
-    <!-- Main Content Block -->
-    <main class="main-content">
-        {% block content %}
-        {% endblock %}
-    </main>
+    <!-- Overlay for mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2025 HairCare Community. Made with love for healthy hair.</p>
-    </footer>
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+        <!-- Flash Messages -->
+        {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags|default:'info' }}">
+                        <span class="alert-icon">
+                            {% if message.tags == 'success' %}✓{% elif message.tags == 'error' %}✕{% else %}ℹ{% endif %}
+                        </span>
+                        <span class="alert-text">{{ message }}</span>
+                        <button class="alert-close" onclick="this.parentElement.remove()">×</button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Main Content Block -->
+        <main class="main-content">
+            {% block content %}
+            {% endblock %}
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2025 HairCare Community. Made with ❤️ for healthy hair.</p>
+                <div class="footer-links">
+                    <a href="#">About</a>
+                    <a href="#">Privacy</a>
+                    <a href="#">Terms</a>
+                    <a href="#">Contact</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Mobile Menu Toggle Script -->
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+
+        // Toggle sidebar on mobile
+        function toggleSidebar() {
+            sidebar.classList.toggle('active');
+            sidebarOverlay.classList.toggle('active');
+            mobileMenuBtn.classList.toggle('active');
+            document.body.classList.toggle('sidebar-open');
+        }
+
+        // Mobile menu button click
+        mobileMenuBtn.addEventListener('click', toggleSidebar);
+
+        // Overlay click closes sidebar
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+
+        // Close sidebar when clicking a link on mobile
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                if (window.innerWidth <= 968) {
+                    toggleSidebar();
+                }
+            });
+        });
+
+        // Close sidebar on ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && sidebar.classList.contains('active')) {
+                toggleSidebar();
+            }
+        });
+
+        // Handle window resize
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                if (window.innerWidth > 968) {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                    mobileMenuBtn.classList.remove('active');
+                    document.body.classList.remove('sidebar-open');
+                }
+            }, 250);
+        });
+
+        // Auto-dismiss alerts after 5 seconds
+        document.addEventListener('DOMContentLoaded', () => {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.style.animation = 'slideOut 0.3s ease forwards';
+                    setTimeout(() => alert.remove(), 300);
+                }, 5000);
+            });
+        });
+    </script>
+
+    {% block extra_js %}{% endblock %}
 </body>
 </html>
