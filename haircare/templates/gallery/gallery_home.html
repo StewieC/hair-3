@@ -1,0 +1,114 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Hair Transformations Gallery{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <div>
+            <h1> Transformation Gallery</h1>
+            <p style="color: var(--text-secondary); margin-top: 0.5rem;">
+                Real results from real people. Get inspired by their hair journeys!
+            </p>
+        </div>
+        <a href="{% url 'add_transformation' %}" class="btn-primary">Share Your Journey</a>
+    </div>
+
+    <!-- Filters -->
+    <div style="background: var(--bg-card); padding: 2rem; border-radius: var(--radius-xl); margin: 2rem 0; border: 1px solid var(--border-light);">
+        <form method="GET" style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 1.5rem; align-items: end;">
+            <div>
+                <label for="hair_type" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 600;">
+                    Filter by Hair Type
+                </label>
+                <select id="hair_type" name="hair_type" 
+                        style="width: 100%; padding: 1rem; background: var(--bg-dark); border: 2px solid var(--border-color); border-radius: var(--radius-md); color: var(--text-primary);">
+                    <option value="all">All Hair Types</option>
+                    {% for value, label in hair_types %}
+                        <option value="{{ value }}" {% if selected_hair_type == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label for="concern" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 600;">
+                    Filter by Concern
+                </label>
+                <select id="concern" name="concern" 
+                        style="width: 100%; padding: 1rem; background: var(--bg-dark); border: 2px solid var(--border-color); border-radius: var(--radius-md); color: var(--text-primary);">
+                    <option value="all">All Concerns</option>
+                    {% for value, label in concerns %}
+                        <option value="{{ value }}" {% if selected_concern == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" class="btn-primary" style="white-space: nowrap;">
+                Apply Filters
+            </button>
+        </form>
+    </div>
+
+    <!-- Transformations Grid -->
+    <div class="products-grid">
+        {% for transformation in transformations %}
+        <div class="product-card" style="cursor: pointer;" onclick="window.location.href='{% url 'transformation_detail' transformation.id %}'">
+            {% if transformation.featured %}
+                <span class="featured-badge">Featured</span>
+            {% endif %}
+            
+            <!-- Before/After Images -->
+            <div style="position: relative; height: 280px; overflow: hidden;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; height: 100%;">
+                    <div style="position: relative; overflow: hidden;">
+                        <img src="{{ transformation.before_photo_url }}" alt="Before" 
+                             style="width: 100%; height: 100%; object-fit: cover;">
+                        <div style="position: absolute; bottom: 0.5rem; left: 0.5rem; background: rgba(0,0,0,0.7); padding: 0.25rem 0.75rem; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 700;">
+                            BEFORE
+                        </div>
+                    </div>
+                    <div style="position: relative; overflow: hidden;">
+                        <img src="{{ transformation.after_photo_url }}" alt="After" 
+                             style="width: 100%; height: 100%; object-fit: cover;">
+                        <div style="position: absolute; bottom: 0.5rem; right: 0.5rem; background: var(--primary); padding: 0.25rem 0.75rem; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 700;">
+                            AFTER
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-info">
+                <h3>{{ transformation.title }}</h3>
+                
+                <div style="display: flex; gap: 0.5rem; margin: 1rem 0; flex-wrap: wrap;">
+                    <span class="tag">{{ transformation.get_hair_type_display }}</span>
+                    <span class="tag">{{ transformation.get_concern_addressed_display }}</span>
+                    <span class="tag">{{ transformation.get_time_period_display }}</span>
+                </div>
+                
+                <p class="description">{{ transformation.story|truncatewords:25 }}</p>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                    <span style="color: var(--text-secondary); font-size: 0.9rem;">
+                        by {{ transformation.user_name }}
+                    </span>
+                    <span style="color: var(--secondary); font-weight: 700;">
+                        ❤️ {{ transformation.likes }}
+                    </span>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div style="grid-column: 1/-1; text-align: center; padding: 4rem 2rem;">
+            <p style="font-size: 1.5rem; color: var(--text-muted); margin-bottom: 2rem;">
+                No transformations found. Be the first to share yours!
+            </p>
+            <a href="{% url 'add_transformation' %}" class="btn-primary">
+                Share Your Transformation
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

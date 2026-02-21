@@ -1,0 +1,145 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}{{ transformation.title }} - Gallery{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Back Button -->
+    <a href="{% url 'gallery_home' %}" class="btn-secondary" style="margin-bottom: 2rem; display: inline-block;">
+        ← Back to Gallery
+    </a>
+
+    <!-- Main Content -->
+    <div class="result-card">
+        {% if transformation.featured %}
+            <span class="featured-badge" style="position: absolute; top: 2rem; right: 2rem;">Featured</span>
+        {% endif %}
+
+        <h1>{{ transformation.title }}</h1>
+        
+        <div style="display: flex; justify-content: center; gap: 1rem; margin: 2rem 0; flex-wrap: wrap;">
+            <span class="hair-type">{{ transformation.get_hair_type_display }} Hair</span>
+            <span class="tag" style="background: var(--secondary); color: white; border: none;">
+                {{ transformation.get_concern_addressed_display }}
+            </span>
+            <span class="tag">{{ transformation.get_time_period_display }}</span>
+        </div>
+
+        <!-- Before/After Photos -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 3rem 0;">
+            <div>
+                <h3 style="text-align: center; margin-bottom: 1rem; color: var(--text-muted);">BEFORE</h3>
+                <img src="{{ transformation.before_photo_url }}" alt="Before" 
+                     style="width: 100%; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);">
+            </div>
+            <div>
+                <h3 style="text-align: center; margin-bottom: 1rem; color: var(--primary-light);">AFTER</h3>
+                <img src="{{ transformation.after_photo_url }}" alt="After" 
+                     style="width: 100%; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg), var(--shadow-glow-teal);">
+            </div>
+        </div>
+
+        <!-- Story Section -->
+        <div class="routine-box" style="text-align: left;">
+            <h2 style="text-align: center; margin-bottom: 2rem;">My Hair Journey</h2>
+            <p style="font-size: 1.125rem; line-height: 1.9; color: var(--text-secondary); white-space: pre-line;">
+                {{ transformation.story }}
+            </p>
+        </div>
+
+        <!-- Routine Section -->
+        <div style="background: var(--bg-card); padding: 2rem; border-radius: var(--radius-lg); margin: 2rem 0; border: 1px solid var(--border-light);">
+            <h2 style="margin-bottom: 1.5rem; text-align: center;">My Routine</h2>
+            <p style="font-size: 1.05rem; line-height: 1.8; color: var(--text-secondary); white-space: pre-line;">
+                {{ transformation.routine_description }}
+            </p>
+        </div>
+
+        <!-- Products Used -->
+        {% if transformation.products_used.all %}
+        <div style="margin: 3rem 0;">
+            <h2 style="margin-bottom: 2rem; text-align: center;">Products I Used</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem;">
+                {% for product in transformation.products_used.all %}
+                <a href="{% url 'product_detail' product.id %}" 
+                   style="background: var(--bg-card); padding: 1.5rem; border-radius: var(--radius-md); 
+                          border: 1px solid var(--border-light); text-decoration: none; 
+                          transition: all 0.3s; display: block;">
+                    <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">{{ product.name }}</h4>
+                    <p style="color: var(--primary-light); font-weight: 700; margin: 0;">KSh {{ product.price }}</p>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Author & Likes -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin: 3rem 0; padding: 2rem; background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-light);">
+            <div>
+                <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">Shared by</p>
+                <p style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin: 0;">
+                    {{ transformation.user_name }}
+                </p>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">
+                    {{ transformation.created_at|date:"F d, Y" }}
+                </p>
+            </div>
+            <div style="text-align: center;">
+                <a href="{% url 'like_transformation' transformation.id %}" 
+                   style="background: linear-gradient(135deg, var(--secondary), var(--secondary-dark)); 
+                          color: white; padding: 1rem 2rem; border-radius: var(--radius-full); 
+                          text-decoration: none; font-weight: 700; font-size: 1.125rem; 
+                          display: inline-block; transition: all 0.3s;">
+                    ❤️ {{ transformation.likes }} Likes
+                </a>
+            </div>
+        </div>
+
+        <!-- Comments Section -->
+        <div style="border-top: 2px solid var(--border-color); padding-top: 3rem; margin-top: 3rem;">
+            <h2 style="margin-bottom: 2rem;">Comments ({{ comments.count }})</h2>
+
+            <!-- Add Comment Form -->
+            <form method="POST" action="{% url 'add_comment' transformation.id %}" 
+                  style="background: var(--bg-card); padding: 2rem; border-radius: var(--radius-lg); margin-bottom: 3rem; border: 1px solid var(--border-light);">
+                {% csrf_token %}
+                <div class="question">
+                    <label for="commenter_name">Your Name</label>
+                    <input type="text" id="commenter_name" name="commenter_name" 
+                           placeholder="Your name" style="margin-bottom: 1rem;">
+                </div>
+                <div class="question">
+                    <label for="comment_text">Your Comment</label>
+                    <textarea id="comment_text" name="comment_text" rows="4" 
+                              placeholder="Share your thoughts, ask questions, or offer encouragement!" required></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Post Comment</button>
+            </form>
+
+            <!-- Comments List -->
+            <div>
+                {% for comment in comments %}
+                <div style="background: var(--bg-card); padding: 1.5rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; border: 1px solid var(--border-light);">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <span style="font-weight: 700; color: var(--text-primary);">
+                            {{ comment.commenter_name }}
+                        </span>
+                        <span style="color: var(--text-muted); font-size: 0.9rem;">
+                            {{ comment.created_at|date:"M d, Y - g:i A" }}
+                        </span>
+                    </div>
+                    <p style="color: var(--text-secondary); line-height: 1.7;">
+                        {{ comment.comment_text }}
+                    </p>
+                </div>
+                {% empty %}
+                <p style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                    No comments yet. Be the first to comment!
+                </p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
