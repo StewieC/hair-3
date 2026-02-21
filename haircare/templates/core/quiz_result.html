@@ -52,6 +52,18 @@
             </ul>
         </div>
 
+        
+        <div style="background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: 2.5rem; border-radius: var(--radius-xl); margin: 2rem 0; text-align: center; color: white;">
+            <h2 style="color: white; margin-bottom: 1rem;">📅 Never Miss Your Routine</h2>
+            <p style="opacity: 0.95; font-size: 1.125rem; margin-bottom: 2rem;">
+                Set up automatic reminders for your hair care schedule and track your consistency
+            </p>
+            <a href="{% url 'calendar_home' %}" 
+            style="background: white; color: var(--primary); padding: 1rem 2.5rem; border-radius: var(--radius-full); text-decoration: none; font-weight: 700; font-size: 1.125rem; display: inline-block;">
+                Set Up My Calendar
+            </a>
+        </div>
+
         <div class="actions">
             <a href="{% url 'home' %}" class="btn-secondary">Take Quiz Again</a>
             <a href="{% url 'tips_list' %}" class="btn-primary">Explore Community Tips</a>

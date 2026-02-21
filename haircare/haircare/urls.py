@@ -9,4 +9,5 @@ urlpatterns = [
     path('booking/', include('booking.urls')),
     path('chatbot/', include('chatbot.urls')),
     path('gallery/', include('gallery.urls')), 
+    path('calendar/', include('scheduler.urls')),
 ]

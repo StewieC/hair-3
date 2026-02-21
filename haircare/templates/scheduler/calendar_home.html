@@ -1,0 +1,173 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}My Hair Care Calendar{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <div>
+            <h1>📅 My Hair Care Calendar</h1>
+            <p style="color: var(--text-secondary); margin-top: 0.5rem;">
+                Stay consistent with your hair care routine
+            </p>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+            <a href="{% url 'schedule_history' %}" class="btn-secondary">View History</a>
+            <a href="{% url 'add_schedule' %}" class="btn-primary">Add Event</a>
+        </div>
+    </div>
+
+    <!-- Today's Events -->
+    {% if today_events %}
+    <div style="background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: 2rem; border-radius: var(--radius-xl); margin-bottom: 2rem; box-shadow: var(--shadow-glow-teal);">
+        <h2 style="color: white; margin-bottom: 1.5rem;">Today's Tasks</h2>
+        <div style="display: grid; gap: 1rem;">
+            {% for event in today_events %}
+            <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); padding: 1.5rem; border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h3 style="color: white; margin-bottom: 0.5rem;">
+                        {{ event.custom_event_name|default:event.get_event_type_display }}
+                    </h3>
+                    <p style="color: rgba(255,255,255,0.9); margin: 0;">
+                        🕐 {{ event.time_of_day|time:"g:i A" }}
+                    </p>
+                </div>
+                <a href="{% url 'mark_completed' event.id %}" 
+                   style="background: white; color: var(--primary); padding: 0.75rem 1.5rem; border-radius: var(--radius-md); text-decoration: none; font-weight: 700;">
+                    Mark Done
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Upcoming Events -->
+    {% if upcoming_events %}
+    <div style="background: var(--bg-card); padding: 2rem; border-radius: var(--radius-lg); margin-bottom: 2rem; border: 1px solid var(--border-light);">
+        <h3 style="margin-bottom: 1.5rem;">📌 Upcoming This Week</h3>
+        <div style="display: grid; gap: 1rem;">
+            {% for event in upcoming_events %}
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--bg-dark); border-radius: var(--radius-md);">
+                <div>
+                    <strong style="color: var(--text-primary);">
+                        {{ event.custom_event_name|default:event.get_event_type_display }}
+                    </strong>
+                    <p style="color: var(--text-secondary); margin: 0.25rem 0 0 0; font-size: 0.9rem;">
+                        {{ event.next_scheduled|date:"l, M d" }} at {{ event.time_of_day|time:"g:i A" }}
+                    </p>
+                </div>
+                <span class="tag">{{ event.get_frequency_display }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Calendar Navigation -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin: 2rem 0;">
+        <a href="?month={{ prev_month }}&year={{ prev_year }}" 
+           style="background: var(--bg-card); color: var(--text-primary); padding: 0.75rem 1.5rem; border-radius: var(--radius-md); text-decoration: none; border: 1px solid var(--border-light);">
+            ← Previous
+        </a>
+        <h2 style="color: var(--text-primary);">{{ month_name }} {{ year }}</h2>
+        <a href="?month={{ next_month }}&year={{ next_year }}" 
+           style="background: var(--bg-card); color: var(--text-primary); padding: 0.75rem 1.5rem; border-radius: var(--radius-md); text-decoration: none; border: 1px solid var(--border-light);">
+            Next →
+        </a>
+    </div>
+
+    <!-- Calendar Grid -->
+    <div style="background: var(--bg-card); padding: 2rem; border-radius: var(--radius-xl); border: 1px solid var(--border-light);">
+        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 1rem; text-align: center;">
+            <!-- Day Headers -->
+            {% for day in "Mon Tue Wed Thu Fri Sat Sun".split %}
+            <div style="color: var(--text-muted); font-weight: 700; padding: 0.5rem;">{{ day }}</div>
+            {% endfor %}
+            
+            <!-- Calendar Days -->
+            {% for week in calendar %}
+                {% for day in week %}
+                    <div style="aspect-ratio: 1; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 0.5rem; position: relative; 
+                                {% if day == 0 %}opacity: 0.3;{% endif %}
+                                {% if day == today.day and month == today.month and year == today.year %}
+                                    background: var(--primary); color: white; font-weight: 700;
+                                {% else %}
+                                    background: var(--bg-dark);
+                                {% endif %}">
+                        {% if day != 0 %}
+                            <div style="font-size: 1.25rem; margin-bottom: 0.25rem;">{{ day }}</div>
+                            {% if day in events_by_date %}
+                                <div style="font-size: 0.7rem;">
+                                    {% for event in events_by_date|get_item:day %}
+                                        <div style="background: var(--secondary); color: white; padding: 0.125rem 0.25rem; border-radius: 0.25rem; margin-top: 0.25rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                            {{ event.get_event_type_display|truncatewords:1 }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- All Schedules List -->
+    <div style="margin-top: 3rem;">
+        <h2 style="margin-bottom: 1.5rem;">All Active Schedules</h2>
+        {% if schedules %}
+        <div style="display: grid; gap: 1.5rem;">
+            {% for schedule in schedules %}
+            <div class="tip-card">
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <div style="flex: 1;">
+                        <h3 style="color: var(--text-primary); margin-bottom: 0.5rem;">
+                            {{ schedule.custom_event_name|default:schedule.get_event_type_display }}
+                        </h3>
+                        <div style="display: flex; gap: 1rem; margin: 0.75rem 0; flex-wrap: wrap;">
+                            <span class="tag">{{ schedule.get_frequency_display }}</span>
+                            <span style="color: var(--text-secondary);">🕐 {{ schedule.time_of_day|time:"g:i A" }}</span>
+                            {% if schedule.reminder_enabled %}
+                                <span style="color: var(--primary-light);">🔔 Reminders ON</span>
+                            {% endif %}
+                        </div>
+                        <p style="color: var(--text-secondary); margin: 0.5rem 0;">
+                            <strong>Next:</strong> {{ schedule.next_scheduled|date:"l, M d, Y" }}
+                        </p>
+                        {% if schedule.notes %}
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">
+                                {{ schedule.notes }}
+                            </p>
+                        {% endif %}
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <a href="{% url 'edit_schedule' schedule.id %}" 
+                           style="background: var(--bg-elevated); color: var(--text-primary); padding: 0.5rem 1rem; border-radius: var(--radius-md); text-decoration: none; font-size: 0.9rem;">
+                            Edit
+                        </a>
+                        <a href="{% url 'delete_schedule' schedule.id %}" 
+                           onclick="return confirm('Delete this schedule?')"
+                           style="background: var(--secondary); color: white; padding: 0.5rem 1rem; border-radius: var(--radius-md); text-decoration: none; font-size: 0.9rem;">
+                            Delete
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="tip-card" style="text-align: center; padding: 3rem;">
+            <p style="font-size: 1.25rem; color: var(--text-muted); margin-bottom: 2rem;">
+                No schedules yet. Start building your routine!
+            </p>
+            <a href="{% url 'add_schedule' %}" class="btn-primary">Create Your First Schedule</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Template filter for dictionary access -->
+{% load custom_filters %}
+{% endblock %}

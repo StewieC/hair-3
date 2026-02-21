@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'booking',
     'chatbot',
     'gallery',
+    'scheduler',
 ]
 
 MIDDLEWARE = [
@@ -81,3 +82,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Gemini API Key
 GEMINI_API_KEY = config('GEMINI_API_KEY', default='')
+
+# Add email settings for reminders (use console backend for testing)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # For testing - emails print to console
+# For production, use real email:
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'your-email@gmail.com'
+# EMAIL_HOST_PASSWORD = 'your-app-password'
