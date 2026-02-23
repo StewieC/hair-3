@@ -7,7 +7,7 @@
 <div class="container">
     <div class="page-header">
         <div>
-            <h1>📅 My Hair Care Calendar</h1>
+            <h1>My Hair Care Calendar</h1>
             <p style="color: var(--text-secondary); margin-top: 0.5rem;">
                 Stay consistent with your hair care routine
             </p>
@@ -20,21 +20,21 @@
 
     <!-- Today's Events -->
     {% if today_events %}
-    <div style="background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: 2rem; border-radius: var(--radius-xl); margin-bottom: 2rem; box-shadow: var(--shadow-glow-teal);">
-        <h2 style="color: white; margin-bottom: 1.5rem;">Today's Tasks</h2>
+    <div style="background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: 2rem; border-radius: var(--radius-lg); margin-bottom: 2rem; box-shadow: var(--shadow-glow-teal);">
+        <h2 style="color: white; margin-bottom: 1.5rem; font-size: 1.5rem;">Today's Tasks</h2>
         <div style="display: grid; gap: 1rem;">
             {% for event in today_events %}
-            <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); padding: 1.5rem; border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center;">
+            <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); padding: 1.25rem; border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                    <h3 style="color: white; margin-bottom: 0.5rem;">
+                    <h3 style="color: white; margin-bottom: 0.5rem; font-size: 1.125rem;">
                         {{ event.custom_event_name|default:event.get_event_type_display }}
                     </h3>
-                    <p style="color: rgba(255,255,255,0.9); margin: 0;">
-                        🕐 {{ event.time_of_day|time:"g:i A" }}
+                    <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 0.875rem;">
+                        {{ event.time_of_day|time:"g:i A" }}
                     </p>
                 </div>
                 <a href="{% url 'mark_completed' event.id %}" 
-                   style="background: white; color: var(--primary); padding: 0.75rem 1.5rem; border-radius: var(--radius-md); text-decoration: none; font-weight: 700;">
+                   style="background: white; color: var(--primary); padding: 0.625rem 1.25rem; border-radius: var(--radius-md); text-decoration: none; font-weight: 600; font-size: 0.875rem;">
                     Mark Done
                 </a>
             </div>
@@ -45,16 +45,16 @@
 
     <!-- Upcoming Events -->
     {% if upcoming_events %}
-    <div style="background: var(--bg-card); padding: 2rem; border-radius: var(--radius-lg); margin-bottom: 2rem; border: 1px solid var(--border-light);">
-        <h3 style="margin-bottom: 1.5rem;">📌 Upcoming This Week</h3>
+    <div style="background: var(--bg-card); padding: 1.75rem; border-radius: var(--radius-lg); margin-bottom: 2rem; border: 1px solid var(--border-light);">
+        <h3 style="margin-bottom: 1.25rem; font-size: 1.25rem;">Upcoming This Week</h3>
         <div style="display: grid; gap: 1rem;">
             {% for event in upcoming_events %}
             <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--bg-dark); border-radius: var(--radius-md);">
                 <div>
-                    <strong style="color: var(--text-primary);">
+                    <strong style="color: var(--text-primary); font-size: 0.9375rem;">
                         {{ event.custom_event_name|default:event.get_event_type_display }}
                     </strong>
-                    <p style="color: var(--text-secondary); margin: 0.25rem 0 0 0; font-size: 0.9rem;">
+                    <p style="color: var(--text-secondary); margin: 0.25rem 0 0 0; font-size: 0.8125rem;">
                         {{ event.next_scheduled|date:"l, M d" }} at {{ event.time_of_day|time:"g:i A" }}
                     </p>
                 </div>
@@ -68,28 +68,32 @@
     <!-- Calendar Navigation -->
     <div style="display: flex; justify-content: space-between; align-items: center; margin: 2rem 0;">
         <a href="?month={{ prev_month }}&year={{ prev_year }}" 
-           style="background: var(--bg-card); color: var(--text-primary); padding: 0.75rem 1.5rem; border-radius: var(--radius-md); text-decoration: none; border: 1px solid var(--border-light);">
+           style="background: var(--bg-card); color: var(--text-primary); padding: 0.625rem 1.25rem; border-radius: var(--radius-md); text-decoration: none; border: 1px solid var(--border-light); font-size: 0.875rem; font-weight: 500;">
             ← Previous
         </a>
-        <h2 style="color: var(--text-primary);">{{ month_name }} {{ year }}</h2>
+        <h2 style="color: var(--text-primary); font-size: 1.5rem;">{{ month_name }} {{ year }}</h2>
         <a href="?month={{ next_month }}&year={{ next_year }}" 
-           style="background: var(--bg-card); color: var(--text-primary); padding: 0.75rem 1.5rem; border-radius: var(--radius-md); text-decoration: none; border: 1px solid var(--border-light);">
+           style="background: var(--bg-card); color: var(--text-primary); padding: 0.625rem 1.25rem; border-radius: var(--radius-md); text-decoration: none; border: 1px solid var(--border-light); font-size: 0.875rem; font-weight: 500;">
             Next →
         </a>
     </div>
 
     <!-- Calendar Grid -->
-    <div style="background: var(--bg-card); padding: 2rem; border-radius: var(--radius-xl); border: 1px solid var(--border-light);">
-        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 1rem; text-align: center;">
+    <div style="background: var(--bg-card); padding: 1.75rem; border-radius: var(--radius-lg); border: 1px solid var(--border-light);">
+        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.75rem; text-align: center;">
             <!-- Day Headers -->
-            {% for day in "Mon Tue Wed Thu Fri Sat Sun".split %}
-            <div style="color: var(--text-muted); font-weight: 700; padding: 0.5rem;">{{ day }}</div>
-            {% endfor %}
+            <div style="color: var(--text-muted); font-weight: 600; padding: 0.5rem; font-size: 0.8125rem;">Mon</div>
+            <div style="color: var(--text-muted); font-weight: 600; padding: 0.5rem; font-size: 0.8125rem;">Tue</div>
+            <div style="color: var(--text-muted); font-weight: 600; padding: 0.5rem; font-size: 0.8125rem;">Wed</div>
+            <div style="color: var(--text-muted); font-weight: 600; padding: 0.5rem; font-size: 0.8125rem;">Thu</div>
+            <div style="color: var(--text-muted); font-weight: 600; padding: 0.5rem; font-size: 0.8125rem;">Fri</div>
+            <div style="color: var(--text-muted); font-weight: 600; padding: 0.5rem; font-size: 0.8125rem;">Sat</div>
+            <div style="color: var(--text-muted); font-weight: 600; padding: 0.5rem; font-size: 0.8125rem;">Sun</div>
             
             <!-- Calendar Days -->
             {% for week in calendar %}
                 {% for day in week %}
-                    <div style="aspect-ratio: 1; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 0.5rem; position: relative; 
+                    <div style="aspect-ratio: 1; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.5rem; position: relative; font-size: 0.875rem;
                                 {% if day == 0 %}opacity: 0.3;{% endif %}
                                 {% if day == today.day and month == today.month and year == today.year %}
                                     background: var(--primary); color: white; font-weight: 700;
@@ -97,13 +101,15 @@
                                     background: var(--bg-dark);
                                 {% endif %}">
                         {% if day != 0 %}
-                            <div style="font-size: 1.25rem; margin-bottom: 0.25rem;">{{ day }}</div>
+                            <div style="font-size: 1rem; margin-bottom: 0.25rem; font-weight: 600;">{{ day }}</div>
                             {% if day in events_by_date %}
-                                <div style="font-size: 0.7rem;">
-                                    {% for event in events_by_date|get_item:day %}
-                                        <div style="background: var(--secondary); color: white; padding: 0.125rem 0.25rem; border-radius: 0.25rem; margin-top: 0.25rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                            {{ event.get_event_type_display|truncatewords:1 }}
-                                        </div>
+                                <div style="font-size: 0.625rem;">
+                                    {% for event in schedules %}
+                                        {% if event.next_scheduled.day == day and event.next_scheduled.month == month and event.next_scheduled.year == year %}
+                                            <div style="background: var(--secondary); color: white; padding: 0.125rem 0.25rem; border-radius: 0.25rem; margin-top: 0.25rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                                {{ event.get_event_type_display|truncatewords:1 }}
+                                            </div>
+                                        {% endif %}
                                     {% endfor %}
                                 </div>
                             {% endif %}
@@ -116,40 +122,40 @@
 
     <!-- All Schedules List -->
     <div style="margin-top: 3rem;">
-        <h2 style="margin-bottom: 1.5rem;">All Active Schedules</h2>
+        <h2 style="margin-bottom: 1.5rem; font-size: 1.5rem;">All Active Schedules</h2>
         {% if schedules %}
-        <div style="display: grid; gap: 1.5rem;">
+        <div style="display: grid; gap: 1.25rem;">
             {% for schedule in schedules %}
             <div class="tip-card">
-                <div style="display: flex; justify-content: space-between; align-items: start;">
+                <div style="display: flex; justify-content: space-between; align-items: start; gap: 1rem;">
                     <div style="flex: 1;">
-                        <h3 style="color: var(--text-primary); margin-bottom: 0.5rem;">
+                        <h3 style="color: var(--text-primary); margin-bottom: 0.5rem; font-size: 1.125rem;">
                             {{ schedule.custom_event_name|default:schedule.get_event_type_display }}
                         </h3>
                         <div style="display: flex; gap: 1rem; margin: 0.75rem 0; flex-wrap: wrap;">
                             <span class="tag">{{ schedule.get_frequency_display }}</span>
-                            <span style="color: var(--text-secondary);">🕐 {{ schedule.time_of_day|time:"g:i A" }}</span>
+                            <span style="color: var(--text-secondary); font-size: 0.875rem;">{{ schedule.time_of_day|time:"g:i A" }}</span>
                             {% if schedule.reminder_enabled %}
-                                <span style="color: var(--primary-light);">🔔 Reminders ON</span>
+                                <span style="color: var(--primary-light); font-size: 0.875rem;">Reminders ON</span>
                             {% endif %}
                         </div>
-                        <p style="color: var(--text-secondary); margin: 0.5rem 0;">
+                        <p style="color: var(--text-secondary); margin: 0.5rem 0; font-size: 0.875rem;">
                             <strong>Next:</strong> {{ schedule.next_scheduled|date:"l, M d, Y" }}
                         </p>
                         {% if schedule.notes %}
-                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">
+                            <p style="color: var(--text-muted); font-size: 0.8125rem; margin-top: 0.5rem;">
                                 {{ schedule.notes }}
                             </p>
                         {% endif %}
                     </div>
-                    <div style="display: flex; gap: 0.5rem;">
+                    <div style="display: flex; gap: 0.5rem; flex-shrink: 0;">
                         <a href="{% url 'edit_schedule' schedule.id %}" 
-                           style="background: var(--bg-elevated); color: var(--text-primary); padding: 0.5rem 1rem; border-radius: var(--radius-md); text-decoration: none; font-size: 0.9rem;">
+                           style="background: var(--bg-elevated); color: var(--text-primary); padding: 0.5rem 1rem; border-radius: var(--radius-md); text-decoration: none; font-size: 0.8125rem; font-weight: 500;">
                             Edit
                         </a>
                         <a href="{% url 'delete_schedule' schedule.id %}" 
                            onclick="return confirm('Delete this schedule?')"
-                           style="background: var(--secondary); color: white; padding: 0.5rem 1rem; border-radius: var(--radius-md); text-decoration: none; font-size: 0.9rem;">
+                           style="background: var(--secondary); color: white; padding: 0.5rem 1rem; border-radius: var(--radius-md); text-decoration: none; font-size: 0.8125rem; font-weight: 500;">
                             Delete
                         </a>
                     </div>
@@ -159,7 +165,7 @@
         </div>
         {% else %}
         <div class="tip-card" style="text-align: center; padding: 3rem;">
-            <p style="font-size: 1.25rem; color: var(--text-muted); margin-bottom: 2rem;">
+            <p style="font-size: 1.125rem; color: var(--text-muted); margin-bottom: 2rem;">
                 No schedules yet. Start building your routine!
             </p>
             <a href="{% url 'add_schedule' %}" class="btn-primary">Create Your First Schedule</a>
@@ -167,7 +173,4 @@
         {% endif %}
     </div>
 </div>
-
-<!-- Template filter for dictionary access -->
-{% load custom_filters %}
 {% endblock %}

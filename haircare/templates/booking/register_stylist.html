@@ -1,0 +1,118 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Register Your Hair Business{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="form-card" style="max-width: 800px; margin: 0 auto;">
+        <h1 style="text-align: center; margin-bottom: 1rem;">Register Your Hair Business</h1>
+        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.9375rem;">
+            Join our platform and reach more clients. Fill out this form and we'll review your application within 48 hours.
+        </p>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <h3 style="color: var(--primary-light); margin: 2rem 0 1rem 0; font-size: 1.125rem;">Business Information</h3>
+
+            <div class="question">
+                <label for="business_name">Business/Salon Name *</label>
+                <input type="text" id="business_name" name="business_name" placeholder="e.g., Elegant Hair Studio" required>
+            </div>
+
+            <div class="question">
+                <label for="owner_name">Your Full Name *</label>
+                <input type="text" id="owner_name" name="owner_name" placeholder="Your full name" required>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="question">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" placeholder="your@email.com" required>
+                </div>
+
+                <div class="question">
+                    <label for="phone">Phone Number *</label>
+                    <input type="tel" id="phone" name="phone" placeholder="0712345678" required>
+                </div>
+            </div>
+
+            <h3 style="color: var(--primary-light); margin: 2rem 0 1rem 0; font-size: 1.125rem;">Location</h3>
+
+            <div class="question">
+                <label for="location">City/Area *</label>
+                <input type="text" id="location" name="location" placeholder="e.g., Nairobi CBD, Westlands, Mombasa" required>
+            </div>
+
+            <div class="question">
+                <label for="address">Full Physical Address *</label>
+                <textarea id="address" name="address" rows="3" placeholder="Street name, building, floor, landmarks..." required></textarea>
+            </div>
+
+            <h3 style="color: var(--primary-light); margin: 2rem 0 1rem 0; font-size: 1.125rem;">Services & Pricing</h3>
+
+            <div class="question">
+                <label for="services_offered">Services You Offer *</label>
+                <textarea id="services_offered" name="services_offered" rows="4" 
+                          placeholder="List all services (e.g., Braids, Box Braids, Cornrows, Weaves, Relaxers, Locs, Hair Coloring, etc.)" required></textarea>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="question">
+                    <label for="price_range">Price Range *</label>
+                    <input type="text" id="price_range" name="price_range" placeholder="e.g., KSh 1000-5000" required>
+                </div>
+
+                <div class="question">
+                    <label for="years_experience">Years of Experience *</label>
+                    <input type="number" id="years_experience" name="years_experience" min="0" placeholder="e.g., 5" required>
+                </div>
+            </div>
+
+            <div class="question">
+                <label for="business_hours">Business Hours *</label>
+                <input type="text" id="business_hours" name="business_hours" placeholder="e.g., Mon-Sat 9AM-6PM, Sun Closed" required>
+            </div>
+
+            <h3 style="color: var(--primary-light); margin: 2rem 0 1rem 0; font-size: 1.125rem;">Portfolio & Social Media</h3>
+
+            <div class="question">
+                <label for="portfolio_url">Instagram/Facebook/Website (Optional)</label>
+                <input type="url" id="portfolio_url" name="portfolio_url" placeholder="https://instagram.com/yourbusiness">
+                <small style="color: var(--text-muted); display: block; margin-top: 0.5rem; font-size: 0.8125rem;">
+                    Link to your social media or website
+                </small>
+            </div>
+
+            <div class="question">
+                <label for="sample_work_url">Sample Work Photos (Optional)</label>
+                <input type="url" id="sample_work_url" name="sample_work_url" placeholder="Link to photos of your work">
+                <small style="color: var(--text-muted); display: block; margin-top: 0.5rem; font-size: 0.8125rem;">
+                    Upload to Google Drive, Imgur, or your Instagram and paste the link
+                </small>
+            </div>
+
+            <div class="question">
+                <label for="business_description">Tell Us About Your Business *</label>
+                <textarea id="business_description" name="business_description" rows="5" 
+                          placeholder="What makes your business special? What's your specialty? Why should clients choose you?" required></textarea>
+            </div>
+
+            <div style="background: rgba(20, 184, 166, 0.1); padding: 1.5rem; border-radius: var(--radius-md); margin: 2rem 0; border: 1px solid rgba(20, 184, 166, 0.3);">
+                <p style="color: var(--text-secondary); margin: 0; font-size: 0.875rem; line-height: 1.7;">
+                    <strong style="color: var(--primary-light);">What happens next?</strong><br>
+                    1. We'll review your application within 48 hours<br>
+                    2. We may contact you for verification<br>
+                    3. Once approved, your business will be listed on our platform<br>
+                    4. You'll start receiving booking requests from clients!
+                </p>
+            </div>
+
+            <button type="submit" class="btn-primary" style="width: 100%; font-size: 1rem;">
+                Submit Application
+            </button>
+            <a href="{% url 'stylist_list' %}" class="btn-secondary" style="margin-top: 1rem; width: 100%;">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}HairCare Community{% endblock %}</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- Lucide Icons (Wireframe icons) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -25,7 +27,7 @@
         <!-- Logo -->
         <div class="sidebar-header">
             <a href="{% url 'home' %}" class="sidebar-logo">
-                <span class="logo-icon">💇‍♀️</span>
+                <i data-lucide="sparkles" class="logo-icon"></i>
                 <span class="logo-text">HairCare</span>
             </a>
         </div>
@@ -33,37 +35,37 @@
         <!-- Navigation Menu -->
         <nav class="sidebar-nav">
             <a href="{% url 'home' %}" class="nav-item {% if request.path == '/' %}active{% endif %}">
-                <span class="nav-icon">🏠</span>
+                <i data-lucide="home" class="nav-icon"></i>
                 <span class="nav-text">Home</span>
             </a>
 
             <a href="{% url 'tips_list' %}" class="nav-item {% if '/tips/' in request.path %}active{% endif %}">
-                <span class="nav-icon">💡</span>
+                <i data-lucide="lightbulb" class="nav-icon"></i>
                 <span class="nav-text">Tips</span>
             </a>
 
             <a href="{% url 'gallery_home' %}" class="nav-item {% if '/gallery/' in request.path %}active{% endif %}">
-                <span class="nav-icon">🖼️</span>
+                <i data-lucide="images" class="nav-icon"></i>
                 <span class="nav-text">Gallery</span>
             </a>
 
             <a href="{% url 'shop_home' %}" class="nav-item {% if '/shop/' in request.path %}active{% endif %}">
-                <span class="nav-icon">🛍️</span>
+                <i data-lucide="shopping-bag" class="nav-icon"></i>
                 <span class="nav-text">Shop</span>
             </a>
 
             <a href="{% url 'calendar_home' %}" class="nav-item {% if '/calendar/' in request.path %}active{% endif %}">
-                <span class="nav-icon">📅</span>
+                <i data-lucide="calendar" class="nav-icon"></i>
                 <span class="nav-text">Calendar</span>
             </a>
 
             <a href="{% url 'stylist_list' %}" class="nav-item {% if '/booking/' in request.path %}active{% endif %}">
-                <span class="nav-icon">💆‍♀️</span>
+                <i data-lucide="scissors" class="nav-icon"></i>
                 <span class="nav-text">Book Stylist</span>
             </a>
 
             <a href="{% url 'chatbot:chatbot_page' %}" class="nav-item nav-item-special {% if '/chatbot/' in request.path %}active{% endif %}">
-                <span class="nav-icon">💬</span>
+                <i data-lucide="message-circle" class="nav-icon"></i>
                 <span class="nav-text">AI Assistant</span>
             </a>
 
@@ -71,7 +73,7 @@
             <div class="nav-divider"></div>
 
             <a href="{% url 'schedule_history' %}" class="nav-item {% if '/calendar/history/' in request.path %}active{% endif %}">
-                <span class="nav-icon">📊</span>
+                <i data-lucide="bar-chart-2" class="nav-icon"></i>
                 <span class="nav-text">My Progress</span>
             </a>
         </nav>
@@ -79,7 +81,9 @@
         <!-- Sidebar Footer -->
         <div class="sidebar-footer">
             <div class="user-info">
-                <div class="user-avatar">👤</div>
+                <div class="user-avatar">
+                    <i data-lucide="user" style="width: 18px; height: 18px;"></i>
+                </div>
                 <div class="user-details">
                     <div class="user-name">Guest User</div>
                     <div class="user-status">Free Plan</div>
@@ -99,10 +103,12 @@
                 {% for message in messages %}
                     <div class="alert alert-{{ message.tags|default:'info' }}">
                         <span class="alert-icon">
-                            {% if message.tags == 'success' %}✓{% elif message.tags == 'error' %}✕{% else %}ℹ{% endif %}
+                            <i data-lucide="{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}x-circle{% else %}info{% endif %}" style="width: 18px; height: 18px;"></i>
                         </span>
                         <span class="alert-text">{{ message }}</span>
-                        <button class="alert-close" onclick="this.parentElement.remove()">×</button>
+                        <button class="alert-close" onclick="this.parentElement.remove()">
+                            <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+                        </button>
                     </div>
                 {% endfor %}
             </div>
@@ -117,7 +123,7 @@
         <!-- Footer -->
         <footer class="footer">
             <div class="footer-content">
-                <p>&copy; 2025 HairCare Community. Made with ❤️ for healthy hair.</p>
+                <p>&copy; 2025 HairCare Community. Made with care for healthy hair.</p>
                 <div class="footer-links">
                     <a href="#">About</a>
                     <a href="#">Privacy</a>
@@ -128,13 +134,17 @@
         </footer>
     </div>
 
+    <!-- Initialize Lucide Icons -->
+    <script>
+        lucide.createIcons();
+    </script>
+
     <!-- Mobile Menu Toggle Script -->
     <script>
         const sidebar = document.getElementById('sidebar');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
 
-        // Toggle sidebar on mobile
         function toggleSidebar() {
             sidebar.classList.toggle('active');
             sidebarOverlay.classList.toggle('active');
@@ -142,13 +152,9 @@
             document.body.classList.toggle('sidebar-open');
         }
 
-        // Mobile menu button click
         mobileMenuBtn.addEventListener('click', toggleSidebar);
-
-        // Overlay click closes sidebar
         sidebarOverlay.addEventListener('click', toggleSidebar);
 
-        // Close sidebar when clicking a link on mobile
         const navItems = document.querySelectorAll('.nav-item');
         navItems.forEach(item => {
             item.addEventListener('click', () => {
@@ -158,14 +164,12 @@
             });
         });
 
-        // Close sidebar on ESC key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && sidebar.classList.contains('active')) {
                 toggleSidebar();
             }
         });
 
-        // Handle window resize
         let resizeTimer;
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimer);
@@ -179,7 +183,6 @@
             }, 250);
         });
 
-        // Auto-dismiss alerts after 5 seconds
         document.addEventListener('DOMContentLoaded', () => {
             const alerts = document.querySelectorAll('.alert');
             alerts.forEach(alert => {

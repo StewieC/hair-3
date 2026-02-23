@@ -5,10 +5,26 @@
 
 {% block content %}
 <div class="container">
-    <h1 style="text-align: center; margin-bottom: 2rem;">Find & Book a Hair Stylist</h1>
+    <h1 style="margin-bottom: 1rem;">Find & Book a Hair Stylist</h1>
+
+    <!-- Stylist Registration Banner -->
+    <div style="background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: 1.5rem; border-radius: var(--radius-lg); margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
+        <div>
+            <h3 style="color: white; margin-bottom: 0.5rem; font-size: 1.25rem;">Are you a hairstylist?</h3>
+            <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 0.9375rem;">Join our platform and get more clients. Registration is free!</p>
+        </div>
+        <div style="display: flex; gap: 0.75rem;">
+            <a href="{% url 'register_stylist' %}" class="btn-primary" style="background: white; color: var(--primary); white-space: nowrap;">
+                Register Your Business
+            </a>
+            <a href="{% url 'check_application' %}" class="btn-secondary" style="background: rgba(255,255,255,0.2); color: white; border-color: rgba(255,255,255,0.3); white-space: nowrap;">
+                Check Status
+            </a>
+        </div>
+    </div>
 
     <form method="GET" class="search-bar">
-        <input type="text" name="location" placeholder="Enter city e.g. Nairobi, Mombasa, Kisumu..." 
+        <input type="text" name="location" placeholder="Enter city e.g. Nairobi, Kisumu..." 
                value="{{ current_location }}">
         <button type="submit">Search</button>
     </form>
@@ -19,21 +35,29 @@
             {% if stylist.image_url %}
                 <img src="{{ stylist.image_url }}" alt="{{ stylist.name }}">
             {% else %}
-                <div class="placeholder-img">💇‍♀️</div>
+                <div class="placeholder-img">
+                    <i data-lucide="scissors" style="width: 48px; height: 48px; color: var(--text-muted);"></i>
+                </div>
             {% endif %}
             <div class="stylist-info">
                 <h3>{{ stylist.name }}</h3>
-                <p><strong>Location:</strong> {{ stylist.location }}</p>
-                <p><strong>Services:</strong> {{ stylist.services }}</p>
-                <p><strong>Price Range:</strong> {{ stylist.price_range|default:"Contact for pricing" }}</p>
-                <p><strong>Rating:</strong> {{ stylist.rating }} ⭐</p>
-                <p><strong>Phone:</strong> {{ stylist.phone }}</p>
+                <p style="font-size: 0.875rem;"><strong>Location:</strong> {{ stylist.location }}</p>
+                <p style="font-size: 0.875rem;"><strong>Services:</strong> {{ stylist.services }}</p>
+                <p style="font-size: 0.875rem;"><strong>Price:</strong> {{ stylist.price_range|default:"Contact for pricing" }}</p>
+                <p style="font-size: 0.875rem;"><strong>Rating:</strong> {{ stylist.rating }} ⭐</p>
+                <p style="font-size: 0.875rem;"><strong>Phone:</strong> {{ stylist.phone }}</p>
                 <a href="{% url 'book_stylist' stylist.id %}" class="btn-primary" style="margin-top: 1rem; width: 100%;">Book Now</a>
             </div>
         </div>
         {% empty %}
-        <p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">No stylists found in this area yet.</p>
+        <div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+            <p style="color: var(--text-muted); font-size: 1.125rem;">No stylists found in this area yet.</p>
+        </div>
         {% endfor %}
     </div>
 </div>
+
+<script>
+    lucide.createIcons();
+</script>
 {% endblock %}

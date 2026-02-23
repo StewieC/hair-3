@@ -1,0 +1,74 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Check Application Status{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="form-card" style="max-width: 600px; margin: 0 auto;">
+        <h1 style="text-align: center; margin-bottom: 1rem;">Check Application Status</h1>
+        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.9375rem;">
+            Enter the email and phone number you used when applying
+        </p>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="question">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="your@email.com" required>
+            </div>
+
+            <div class="question">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" placeholder="0712345678" required>
+            </div>
+
+            <button type="submit" class="btn-primary" style="width: 100%;">Check Status</button>
+            <a href="{% url 'stylist_list' %}" class="btn-secondary" style="margin-top: 1rem; width: 100%;">Back</a>
+        </form>
+
+        {% if application %}
+        <div style="margin-top: 2rem; padding: 2rem; background: var(--bg-card); border-radius: var(--radius-lg); border: 2px solid 
+                    {% if application.status == 'approved' %}var(--primary)
+                    {% elif application.status == 'rejected' %}var(--secondary)
+                    {% else %}var(--accent-yellow){% endif %};">
+            <h3 style="margin-bottom: 1rem; font-size: 1.125rem;">Application Status</h3>
+            
+            <div style="display: grid; gap: 0.75rem; font-size: 0.9375rem;">
+                <div>
+                    <strong style="color: var(--text-muted);">Business Name:</strong>
+                    <span style="color: var(--text-primary);">{{ application.business_name }}</span>
+                </div>
+                <div>
+                    <strong style="color: var(--text-muted);">Submitted:</strong>
+                    <span style="color: var(--text-primary);">{{ application.submitted_at|date:"M d, Y - g:i A" }}</span>
+                </div>
+                <div>
+                    <strong style="color: var(--text-muted);">Status:</strong>
+                    <span style="padding: 0.375rem 0.875rem; border-radius: var(--radius-full); font-weight: 600; font-size: 0.8125rem;
+                                 {% if application.status == 'approved' %}background: var(--primary); color: white;
+                                 {% elif application.status == 'rejected' %}background: var(--secondary); color: white;
+                                 {% else %}background: var(--accent-yellow); color: var(--bg-dark);{% endif %}">
+                        {{ application.get_status_display }}
+                    </span>
+                </div>
+            </div>
+
+            {% if application.status == 'pending' %}
+            <p style="margin-top: 1.5rem; color: var(--text-secondary); font-size: 0.875rem; line-height: 1.6;">
+                Your application is currently under review. We'll contact you within 48 hours.
+            </p>
+            {% elif application.status == 'approved' %}
+            <p style="margin-top: 1.5rem; color: var(--primary-light); font-size: 0.875rem; line-height: 1.6;">
+                Congratulations! Your application has been approved and your business is now listed on our platform.
+            </p>
+            {% elif application.status == 'rejected' %}
+            <p style="margin-top: 1.5rem; color: var(--secondary-light); font-size: 0.875rem; line-height: 1.6;">
+                Unfortunately, your application was not approved at this time. Please contact us for more information.
+            </p>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
