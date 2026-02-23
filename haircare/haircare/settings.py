@@ -92,3 +92,12 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # For testing 
 # EMAIL_USE_TLS = True
 # EMAIL_HOST_USER = 'your-email@gmail.com'
 # EMAIL_HOST_PASSWORD = 'your-app-password'
+
+# PWA Settings
+PWA_APP_NAME = 'HairCare Community'
+PWA_APP_DESCRIPTION = 'Your complete hair care companion'
+PWA_APP_THEME_COLOR = '#14B8A6'
+PWA_APP_BACKGROUND_COLOR = '#0A0E1A'
+PWA_APP_DISPLAY = 'standalone'
+PWA_APP_START_URL = '/'
+PWA_APP_ICONS_APPLE = 'icons/icon-192x192.png'
